@@ -1,21 +1,61 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
+	"yorch-devs/bookstore-golang-postgres/dbutils"
 	"yorch-devs/bookstore-golang-postgres/models"
 
 	"github.com/gin-gonic/gin"
 )
 
-func CreateBook(c *gin.Context) {
-	var book models.Book
+type BookSingleRecord struct {
+	Book         *models.Book `json:"book,omitempty"`
+	Error        string       `json:"error,omitempty"`
+	RowsAffected int64        `json:"rows_affected,omitempty"`
+}
 
-	if err := c.ShouldBindJSON(&book); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+type BooksMultipleRecords struct {
+	Books        *[]models.Book `json:"books,omitempty"`
+	Error        string         `json:"error,omitempty"`
+	RowsAffected int64          `json:"rows_affected,omitempty"`
+}
+
+func GetBooks(c *gin.Context) {
+	var books []models.Book
+	var booksMR BooksMultipleRecords
+
+	result := dbutils.Db.Find(&books)
+
+	if result.Error != nil {
+		booksMR.Error = result.Error.Error()
+		c.JSON(http.StatusBadRequest, booksMR)
 		return
 	}
 
-	fmt.Println(book)
-	c.JSON(http.StatusOK, book)
+	booksMR.Books = &books
+	booksMR.RowsAffected = result.RowsAffected
+	c.JSON(http.StatusOK, booksMR)
+}
+
+func CreateBook(c *gin.Context) {
+	var book models.Book
+	var bookSR BookSingleRecord
+
+	if err := c.ShouldBindJSON(&book); err != nil {
+		bookSR.Error = err.Error()
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	result := dbutils.Db.Create(&book)
+
+	if result.Error != nil {
+		bookSR.Error = result.Error.Error()
+		c.JSON(http.StatusBadRequest, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	bookSR.RowsAffected = result.RowsAffected
+	bookSR.Book = &book
+	c.JSON(http.StatusOK, bookSR)
 }

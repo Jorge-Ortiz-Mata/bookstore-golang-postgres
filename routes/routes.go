@@ -8,6 +8,7 @@ import (
 
 func MountRoutes() {
 	router := gin.Default()
+	router.GET("/books", controllers.GetBooks)
 	router.POST("/books", controllers.CreateBook)
 	router.Run("localhost:8000")
 }
