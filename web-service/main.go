@@ -7,5 +7,6 @@ import (
 
 func main() {
 	dbutils.ConnectToDB()
+	dbutils.ApplyMigrations(dbutils.Db)
 	routes.MountRoutes()
 }
