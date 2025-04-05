@@ -1,1 +1,1 @@
-# go-rest-api
+# Bookstore API - Golang and Postgres
