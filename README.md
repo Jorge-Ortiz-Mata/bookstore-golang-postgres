@@ -12,6 +12,8 @@ This API works under the port 8000. Once you have clone this repo, make sure to 
 - Update a book `PATCH http://localhost:8000/api/v1/books/:id`
 - Delete a book `DELETE http://localhost:8000/api/v1/books/:id`
 
+You have to create a **.env** file under the web-service folder. There you can find a .env.example you can use to add your environment variables. This application uses the username and password from PostgreSQL
+
 Run this web application by running the following command `make run` in the terminal.
 
 ## PostgreSQL setup
