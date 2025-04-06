@@ -8,10 +8,14 @@ import (
 
 func MountRoutes() {
 	router := gin.Default()
-	router.GET("/books", controllers.GetBooks)
-	router.GET("/books/:id", controllers.GetBook)
-	router.PATCH("/books/:id", controllers.UpdateBook)
-	router.POST("/books", controllers.CreateBook)
-	router.DELETE("/books/:id", controllers.DeleteBook)
+	v1 := router.Group("/api/v1")
+	{
+		v1.GET("/books", controllers.GetBooks)
+		v1.GET("/books/:id", controllers.GetBook)
+		v1.PATCH("/books/:id", controllers.UpdateBook)
+		v1.POST("/books", controllers.CreateBook)
+		v1.DELETE("/books/:id", controllers.DeleteBook)
+	}
+
 	router.Run("localhost:8000")
 }
