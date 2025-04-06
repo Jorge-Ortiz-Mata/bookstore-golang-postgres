@@ -12,5 +12,6 @@ func MountRoutes() {
 	router.GET("/books/:id", controllers.GetBook)
 	router.PATCH("/books/:id", controllers.UpdateBook)
 	router.POST("/books", controllers.CreateBook)
+	router.DELETE("/books/:id", controllers.DeleteBook)
 	router.Run("localhost:8000")
 }

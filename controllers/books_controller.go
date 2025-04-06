@@ -112,3 +112,27 @@ func UpdateBook(c *gin.Context) {
 
 	c.JSON(http.StatusOK, bookSR)
 }
+
+func DeleteBook(c *gin.Context) {
+	var book models.Book
+	var bookSR BookSingleRecord
+	id := c.Param("id")
+
+	result := dbutils.Db.First(&book, "id = ?", id)
+
+	if result.Error != nil {
+		bookSR.Error = result.Error.Error()
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	result = dbutils.Db.Delete(&book)
+
+	if result.Error != nil {
+		bookSR.Error = result.Error.Error()
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "The book has been deleted successfully"})
+}
