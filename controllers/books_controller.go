@@ -37,6 +37,25 @@ func GetBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, booksMR)
 }
 
+func GetBook(c *gin.Context) {
+	var book models.Book
+	var bookSR BookSingleRecord
+	id := c.Param("id")
+
+	result := dbutils.Db.First(&book, "id = ?", id)
+
+	if result.Error != nil {
+		bookSR.Error = result.Error.Error()
+		c.JSON(http.StatusBadRequest, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	bookSR.Book = &book
+	bookSR.RowsAffected = result.RowsAffected
+
+	c.JSON(http.StatusOK, bookSR)
+}
+
 func CreateBook(c *gin.Context) {
 	var book models.Book
 	var bookSR BookSingleRecord
