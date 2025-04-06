@@ -78,3 +78,37 @@ func CreateBook(c *gin.Context) {
 	bookSR.Book = &book
 	c.JSON(http.StatusOK, bookSR)
 }
+
+func UpdateBook(c *gin.Context) {
+	var book models.Book
+	var data map[string]any
+	var bookSR BookSingleRecord
+	id := c.Param("id")
+
+	result := dbutils.Db.First(&book, "id = ?", id)
+
+	if result.Error != nil {
+		bookSR.Error = result.Error.Error()
+		c.JSON(http.StatusBadRequest, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		bookSR.Error = err.Error()
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	result = dbutils.Db.Model(&book).Updates(data)
+
+	if result.Error != nil {
+		bookSR.Error = result.Error.Error()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": bookSR.Error})
+		return
+	}
+
+	bookSR.Book = &book
+	bookSR.RowsAffected = result.RowsAffected
+
+	c.JSON(http.StatusOK, bookSR)
+}
