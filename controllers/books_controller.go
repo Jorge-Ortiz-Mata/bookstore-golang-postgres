@@ -1,12 +1,16 @@
 package controllers
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"yorch-devs/bookstore-golang-postgres/dbutils"
 	"yorch-devs/bookstore-golang-postgres/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 const DefaultLimit = 10
@@ -23,9 +27,24 @@ type BooksMultipleRecords struct {
 	RowsAffected int64          `json:"rows_affected,omitempty"`
 }
 
+func setAfterIdParam(c *gin.Context) (string, error) {
+	afterId, afterIdExists := c.GetQuery("after_id")
+
+	if !afterIdExists {
+		return "", nil
+	}
+
+	if err := uuid.Validate(afterId); err != nil {
+		return "", errors.New("invalid after uuid")
+	}
+
+	return afterId, nil
+}
+
 func GetBooks(c *gin.Context) {
 	var books []models.Book
 	var booksMR BooksMultipleRecords
+	var result *gorm.DB
 
 	limit, err := setLimitParam(c)
 
@@ -35,7 +54,20 @@ func GetBooks(c *gin.Context) {
 		return
 	}
 
-	result := dbutils.Db.Order("id asc").Limit(limit).Find(&books)
+	after_id, err := setAfterIdParam(c)
+
+	if err != nil {
+		booksMR.Error = err.Error()
+		c.JSON(http.StatusBadRequest, gin.H{"error": booksMR.Error})
+		return
+	}
+
+	if len(after_id) > 0 {
+		fmt.Println(after_id)
+		result = dbutils.Db.Order("id asc").Where("id > ?", after_id).Limit(limit).Find(&books)
+	} else {
+		result = dbutils.Db.Order("id asc").Limit(limit).Find(&books)
+	}
 
 	if result.Error != nil {
 		booksMR.Error = result.Error.Error()
