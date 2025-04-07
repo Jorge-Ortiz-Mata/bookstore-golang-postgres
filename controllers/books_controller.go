@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"yorch-devs/bookstore-golang-postgres/dbutils"
 	"yorch-devs/bookstore-golang-postgres/models"
 
 	"github.com/gin-gonic/gin"
 )
+
+const DefaultLimit = 10
 
 type BookSingleRecord struct {
 	Book         *models.Book `json:"book,omitempty"`
@@ -24,7 +27,15 @@ func GetBooks(c *gin.Context) {
 	var books []models.Book
 	var booksMR BooksMultipleRecords
 
-	result := dbutils.Db.Find(&books)
+	limit, err := setLimitParam(c)
+
+	if err != nil {
+		booksMR.Error = err.Error()
+		c.JSON(http.StatusBadRequest, gin.H{"error": booksMR.Error})
+		return
+	}
+
+	result := dbutils.Db.Order("id asc").Limit(limit).Find(&books)
 
 	if result.Error != nil {
 		booksMR.Error = result.Error.Error()
@@ -135,4 +146,24 @@ func DeleteBook(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "The book has been deleted successfully"})
+}
+
+func setLimitParam(c *gin.Context) (int, error) {
+	limitStr, limitStrExists := c.GetQuery("limit")
+
+	if limitStrExists {
+		limit, err := strconv.Atoi(limitStr)
+
+		if err != nil {
+			return 0, err
+		}
+
+		if limit <= 0 || limit > 10 {
+			return DefaultLimit, nil
+		}
+
+		return limit, nil
+	}
+
+	return DefaultLimit, nil
 }
