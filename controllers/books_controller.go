@@ -1,19 +1,13 @@
 package controllers
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
-	"strconv"
+	"yorch-devs/bookstore-golang-postgres/controllers/concerns"
 	"yorch-devs/bookstore-golang-postgres/dbutils"
 	"yorch-devs/bookstore-golang-postgres/models"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
-
-const DefaultLimit = 10
 
 type BookSingleRecord struct {
 	Book         *models.Book `json:"book,omitempty"`
@@ -27,56 +21,20 @@ type BooksMultipleRecords struct {
 	RowsAffected int64          `json:"rows_affected,omitempty"`
 }
 
-func setAfterIdParam(c *gin.Context) (string, error) {
-	afterId, afterIdExists := c.GetQuery("after_id")
-
-	if !afterIdExists {
-		return "", nil
-	}
-
-	if err := uuid.Validate(afterId); err != nil {
-		return "", errors.New("invalid after uuid")
-	}
-
-	return afterId, nil
-}
-
 func GetBooks(c *gin.Context) {
 	var books []models.Book
 	var booksMR BooksMultipleRecords
-	var result *gorm.DB
 
-	limit, err := setLimitParam(c)
-
-	if err != nil {
-		booksMR.Error = err.Error()
-		c.JSON(http.StatusBadRequest, gin.H{"error": booksMR.Error})
-		return
-	}
-
-	after_id, err := setAfterIdParam(c)
+	books, rows_affected, err := concerns.BooksDbQuery(c)
 
 	if err != nil {
 		booksMR.Error = err.Error()
 		c.JSON(http.StatusBadRequest, gin.H{"error": booksMR.Error})
-		return
-	}
-
-	if len(after_id) > 0 {
-		fmt.Println(after_id)
-		result = dbutils.Db.Order("id asc").Where("id > ?", after_id).Limit(limit).Find(&books)
-	} else {
-		result = dbutils.Db.Order("id asc").Limit(limit).Find(&books)
-	}
-
-	if result.Error != nil {
-		booksMR.Error = result.Error.Error()
-		c.JSON(http.StatusBadRequest, booksMR)
 		return
 	}
 
 	booksMR.Books = &books
-	booksMR.RowsAffected = result.RowsAffected
+	booksMR.RowsAffected = rows_affected
 	c.JSON(http.StatusOK, booksMR)
 }
 
@@ -178,24 +136,4 @@ func DeleteBook(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "The book has been deleted successfully"})
-}
-
-func setLimitParam(c *gin.Context) (int, error) {
-	limitStr, limitStrExists := c.GetQuery("limit")
-
-	if limitStrExists {
-		limit, err := strconv.Atoi(limitStr)
-
-		if err != nil {
-			return 0, err
-		}
-
-		if limit <= 0 || limit > 10 {
-			return DefaultLimit, nil
-		}
-
-		return limit, nil
-	}
-
-	return DefaultLimit, nil
 }
