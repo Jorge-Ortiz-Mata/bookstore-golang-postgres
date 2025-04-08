@@ -1,5 +1,5 @@
 run:
-	cd web-service && go run .
+	go run .
 
 build: 
-	cd web-service && go build
+	go build

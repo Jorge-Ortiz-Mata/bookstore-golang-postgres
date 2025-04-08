@@ -17,5 +17,5 @@ func MountRoutes() {
 		v1.DELETE("/books/:id", controllers.DeleteBook)
 	}
 
-	router.Run("localhost:8000")
+	router.Run("0.0.0.0:8000")
 }
