@@ -12,9 +12,17 @@ import (
 var Db *gorm.DB
 
 func ConnectToDB() {
+	host := os.Getenv("POSTGRES_HOST")
 	username := os.Getenv("POSTGRES_USERNAME")
 	password := os.Getenv("POSTGRES_PASSWORD")
-	dsn := fmt.Sprintf("host=localhost user=%v password=%v dbname=jorge_test_db port=5432 sslmode=disable", username, password)
+	database := os.Getenv("POSTGRES_DATABASE")
+
+	// // Dev
+	// dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=5432 sslmode=disable", host, username, password, database)
+
+	// // Prod
+	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v", host, username, password, database)
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
