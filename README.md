@@ -20,10 +20,16 @@ Run this web application by running the following command `make run` in the term
 
 In order to create a new API using PostgreSQL, this is the code used to add a new role and create the database this web is connected
 
+To create a role:
+
 ```bash
 CREATE ROLE jorge_test LOGIN PASSWORD 'jorge_test' SUPERUSER;
+```
 
-CREATE DATABASE jorge_test_db
+To create the database:
+
+```bash
+CREATE DATABASE bookstore_golang_postgres_development
   WITH
   OWNER = jorge_test
   ENCODING = 'UTF8'
