@@ -10,7 +10,6 @@ import (
 func main() {
 	gotenv.Load()
 	dbutils.ConnectToDB()
-	// dbutils.ApplyMigrations(dbutils.Db)
 	// seed.RunSeeds()
 	routes.MountRoutes()
 }

@@ -1,0 +1,1 @@
+CREATE INDEX index_books_title ON books(title);

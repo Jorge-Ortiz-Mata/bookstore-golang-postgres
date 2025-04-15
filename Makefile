@@ -27,6 +27,12 @@ migrate-db-development:
 migrate-db-test:
 	migrate -path $(MIGRATIONS_DIR) -database $(TEST_DATABASE_URL) up
 
+rollback-db-development:
+	migrate -path $(MIGRATIONS_DIR) -database $(DEVELOPMENT_DATABASE_URL) down
+
+rollback-db-test:
+	migrate -path $(MIGRATIONS_DIR) -database $(TEST_DATABASE_URL) down
+
 generate-migration:
 	@read -p "Migration name (snake_case): " name; \
 	timestamp=$$(date +%Y%m%d%H%M%S); \
