@@ -15,6 +15,10 @@ func MountRoutes() {
 		v1.PATCH("/books/:id", controllers.UpdateBook)
 		v1.POST("/books", controllers.CreateBook)
 		v1.DELETE("/books/:id", controllers.DeleteBook)
+
+		v1.GET("/users/:id", controllers.GetUser)
+		v1.POST("/users/signup", controllers.SignUp)
+		v1.DELETE("/users/:id", controllers.DeleteUser)
 	}
 
 	router.Run("0.0.0.0:8000")
