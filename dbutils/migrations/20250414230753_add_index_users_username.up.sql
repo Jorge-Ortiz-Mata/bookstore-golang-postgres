@@ -1,0 +1,1 @@
+CREATE INDEX index_users_username ON users(username);

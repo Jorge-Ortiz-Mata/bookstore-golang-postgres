@@ -19,6 +19,8 @@ func MountRoutes() {
 		v1.GET("/users/:id", controllers.GetUser)
 		v1.POST("/users/signup", controllers.SignUp)
 		v1.DELETE("/users/:id", controllers.DeleteUser)
+
+		v1.POST("/login", controllers.Login)
 	}
 
 	router.Run("0.0.0.0:8000")

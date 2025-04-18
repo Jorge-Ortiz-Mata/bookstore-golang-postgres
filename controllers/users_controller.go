@@ -29,7 +29,7 @@ func GetUser(c *gin.Context) {
 	}
 
 	userSR.User.Id = user.Id
-	userSR.User.Login = user.Login
+	userSR.User.Username = user.Username
 	userSR.User.CreatedAt = user.CreatedAt
 	userSR.User.UpdatedAt = user.UpdatedAt
 	userSR.RowsAffected = result.RowsAffected
@@ -64,7 +64,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	userSR.User.Id = user.Id
-	userSR.User.Login = user.Login
+	userSR.User.Username = user.Username
 	userSR.User.CreatedAt = user.CreatedAt
 	userSR.User.UpdatedAt = user.UpdatedAt
 	userSR.RowsAffected = result.RowsAffected

@@ -1,1 +1,0 @@
-CREATE INDEX index_users_login ON users(login);
