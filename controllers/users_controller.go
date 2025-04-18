@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"yorch-devs/bookstore-golang-postgres/dbutils"
+	"yorch-devs/bookstore-golang-postgres/mixins"
 	"yorch-devs/bookstore-golang-postgres/models"
 
 	"github.com/gin-gonic/gin"
@@ -45,6 +46,15 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
+	password, err := mixins.EncryptPassword(user.Password)
+
+	if err != nil {
+		userSR.Error = err.Error()
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to hash password"})
+		return
+	}
+
+	user.Password = password
 	result := dbutils.Db.Create(&user)
 
 	if result.Error != nil {
