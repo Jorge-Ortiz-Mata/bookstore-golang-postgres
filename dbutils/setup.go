@@ -1,7 +1,6 @@
 package dbutils
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"yorch-devs/bookstore-golang-postgres/config"
@@ -19,13 +18,10 @@ func ConnectToDB() {
 	if env == "development" {
 		dsn = config.DevelopmentDatabase()
 	} else if env == "production" {
-		dsn = config.ProdutionDatbase()
+		dsn = config.ProductionDatabase()
 	} else {
 		dsn = config.TestingDatabase()
 	}
-
-	fmt.Println(env)
-	fmt.Println(dsn)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 

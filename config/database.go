@@ -25,7 +25,7 @@ func TestingDatabase() string {
 	return fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable", host, username, password, database, port)
 }
 
-func ProdutionDatbase() string {
+func ProductionDatabase() string {
 	host := os.Getenv("PGHOST")
 	username := os.Getenv("PGUSER")
 	password := os.Getenv("PGPASSWORD")
