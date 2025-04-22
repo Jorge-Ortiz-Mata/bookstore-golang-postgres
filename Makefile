@@ -51,3 +51,6 @@ build:
 
 test:
 	go test ./... --cover
+
+test-logs:
+	go test ./... -v --cover

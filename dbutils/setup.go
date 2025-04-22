@@ -31,5 +31,6 @@ func ConnectToDB() {
 	}
 
 	log.Println("The database was connected successfully")
+	log.Printf("The dsn was configured for %v \n", env)
 	Db = db
 }

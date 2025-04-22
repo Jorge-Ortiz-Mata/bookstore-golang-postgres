@@ -6,8 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func MountRoutes() {
-	router := gin.Default()
+func MountRoutes(router *gin.Engine) {
 	v1 := router.Group("/api/v1")
 	{
 		v1.GET("/books", controllers.GetBooks)
@@ -22,6 +21,4 @@ func MountRoutes() {
 
 		v1.POST("/login", controllers.Login)
 	}
-
-	router.Run("0.0.0.0:8000")
 }
