@@ -28,7 +28,7 @@ The tables definition can be found within the **dbutils/migrations** folder.
 
 ## API Features
 
-This API works under the port 8000.Within this API you can do:
+This API works under the port 8000. Within this API you can do:
 
 ### Books endpoints
 
@@ -45,7 +45,6 @@ To using these endpoints you need to get an auth_token. The login endpoint gener
 - Delete a user `DELETE http://localhost:8000/api/v1/users/:id`
 
 ### Login endpoint
-- Login
 
 Method: `POST`
 URL: `http://localhost:8000/api/v1/login`
@@ -65,7 +64,7 @@ Response:
 }
 ```
 
-### SignUp endpoint
+### Signup endpoint
 
 Method: `POST`
 URL: `http://localhost:8000/api/v1/signup`
@@ -73,7 +72,7 @@ URL: `http://localhost:8000/api/v1/signup`
 Body:
 ```json
 {
-  "username": "jorge",
+  "username": "maria",
   "password": "pass1234"
 }
 ```
