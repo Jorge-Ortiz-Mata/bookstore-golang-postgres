@@ -2,14 +2,11 @@ package controllers
 
 import (
 	"net/http"
-	"os"
-	"time"
 	"yorch-devs/bookstore-golang-postgres/controllers/concerns"
 	"yorch-devs/bookstore-golang-postgres/controllers/controller_structs"
+	"yorch-devs/bookstore-golang-postgres/utils"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 )
 
 func Login(c *gin.Context) {
@@ -34,7 +31,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := generateAuthToken(validUsername.User.Id)
+	token, err := utils.GenerateAuthToken(validUsername.User.Id)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Something went wrong when generating auth token"})
@@ -42,22 +39,4 @@ func Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"auth_token": token})
-}
-
-func generateAuthToken(userId uuid.UUID) (string, error) {
-	var jwtSecret = []byte(os.Getenv("SECRET_KEY"))
-
-	claims := jwt.MapClaims{
-		"user_id": userId,
-		"exp":     time.Now().Add(time.Second * 30).Unix(),
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString(jwtSecret)
-
-	if err != nil {
-		return "", err
-	}
-
-	return signedToken, nil
 }

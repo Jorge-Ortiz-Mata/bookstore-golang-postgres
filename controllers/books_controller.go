@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"yorch-devs/bookstore-golang-postgres/controllers/concerns"
 	"yorch-devs/bookstore-golang-postgres/dbutils"
@@ -32,6 +33,9 @@ func GetBooks(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": booksMR.Error})
 		return
 	}
+
+	userID, _ := c.Get("user_id")
+	fmt.Printf("User ID: %v\n", userID)
 
 	booksMR.Books = &books
 	booksMR.RowsAffected = rows_affected
