@@ -30,11 +30,66 @@ The tables definition can be found within the **dbutils/migrations** folder.
 
 This API works under the port 8000.Within this API you can do:
 
+### Books endpoints
+
+To using these endpoints you need to get an auth_token. The login endpoint generates the auth_token  you can use under the *Authorization* header.
+
 - Get all books `GET http://localhost:8000/api/v1/books`
 - Get a single book `GET http://localhost:8000/api/v1/books/:id`
 - Create a book `POST http://localhost:8000/api/v1/books`
 - Update a book `PATCH http://localhost:8000/api/v1/books/:id`
 - Delete a book `DELETE http://localhost:8000/api/v1/books/:id`
+
+### Users endpoints
+- Get a single user `GET http://localhost:8000/api/v1/users/:id`
+- Delete a user `DELETE http://localhost:8000/api/v1/users/:id`
+
+### Login endpoint
+- Login
+
+Method: `POST`
+URL: `http://localhost:8000/api/v1/login`
+
+Body:
+```json
+{
+  "username": "jorge",
+  "password": "pass1234"
+}
+```
+
+Response:
+```json
+{
+  "auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### SignUp endpoint
+
+Method: `POST`
+URL: `http://localhost:8000/api/v1/signup`
+
+Body:
+```json
+{
+  "username": "jorge",
+  "password": "pass1234"
+}
+```
+
+Response:
+```json
+{
+  "user": {
+    "id": "3164fd2e-330b-47cd-83a2-f26103722c0b",
+    "username": "maria",
+    "created_at": "2025-04-24T19:45:40.226557-06:00",
+    "updated_at": "2025-04-24T19:45:40.226557-06:00"
+  },
+  "rows_affected": 1
+}
+```
 
 ## Author
 
