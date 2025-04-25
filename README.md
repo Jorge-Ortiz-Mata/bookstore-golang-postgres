@@ -1,44 +1,40 @@
 # Bookstore API - Golang and Postgres
 
-This is a basic example on how to create REST API using Golang and PostgreSQL.  
+This is a basic example on how to create REST API using Golang and PostgreSQL.
 
-## Setup
+## Local Development
 
-This API works under the port 8000. Once you have clone this repo, make sure to have your postgres database running. Within this API you can do:
+There are some configurations you need to do before launching this web application.
+
+10. **Install Postgres**. First, you need to have postgres installed. You can use the postgres username and password or create a new role with the required permissions. You can use the following command:
+
+```bash
+CREATE ROLE jorge_test LOGIN PASSWORD 'jorge_test' SUPERUSER;
+```
+
+20. **Add environment variables**. Open this project using VSCode or any other IDE and create a .env file in the root directory. The environment variables this project use are located in the .env.example file. Copy and paste all of them. Don't forget to change the PostgreSQL configuration according to your Postgres server. 
+
+30. **Create and migrate DB**. Once you have access to Postgres, you can create the database and tables using the following steps
+
+- Test DB connection: `make test-db-conn`
+- Create DB for development: `make create-db-development`
+- Create DB for test (for testing purposes): `make create-db-test`
+- Create tables for development: `make migrate-db-development`
+- Create tables for test (for testing purposes): `make migrate-db-test`
+
+The tables definition can be found within the **dbutils/migrations** folder.
+
+40. **Launch Application**. Once you have everything running, you can launch the web application: `make run`
+
+## API Features
+
+This API works under the port 8000.Within this API you can do:
 
 - Get all books `GET http://localhost:8000/api/v1/books`
 - Get a single book `GET http://localhost:8000/api/v1/books/:id`
 - Create a book `POST http://localhost:8000/api/v1/books`
 - Update a book `PATCH http://localhost:8000/api/v1/books/:id`
 - Delete a book `DELETE http://localhost:8000/api/v1/books/:id`
-
-You have to create a **.env** file under the web-service folder. There you can find a .env.example you can use to add your environment variables. This application uses the username and password from PostgreSQL
-
-Run this web application by running the following command `make run` in the terminal.
-
-## PostgreSQL setup
-
-In order to create a new API using PostgreSQL, this is the code used to add a new role and create the database this web is connected
-
-To create a role:
-
-```bash
-CREATE ROLE jorge_test LOGIN PASSWORD 'jorge_test' SUPERUSER;
-```
-
-To create the database:
-
-```bash
-CREATE DATABASE bookstore_golang_postgres_development
-  WITH
-  OWNER = jorge_test
-  ENCODING = 'UTF8'
-  LC_COLLATE = 'C'
-  LC_CTYPE = 'C'
-  TABLESPACE = pg_default
-  CONNECTION LIMIT = -1
-  IS_TEMPLATE = False;
-```
 
 ## Author
 
